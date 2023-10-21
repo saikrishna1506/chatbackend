@@ -1,7 +1,7 @@
 const server =require('http').createServer();
   const io= require('socket.io')(server,{
     cors:{
-        origin:"*"
+        origin:"https://mernfront-9iia.onrender.com"
     }
   })
 
