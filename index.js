@@ -20,8 +20,8 @@ io.on('connection',(socket)=>{
         socket.leave(roomId )
     })
 })
-const port =4000;
-
+// const port =4000;
+const port = process.env.PORT || 4000; // Use the provided PORT or default to 3000
 server.listen(port,()=>{
     console.log("server started on port "+port)
 })
