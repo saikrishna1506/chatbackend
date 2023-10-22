@@ -1,30 +1,82 @@
-const server =require('http').createServer();
-  const io= require('socket.io')(server,{
-    cors:{
-        origin:"https://mernfront-9iia.onrender.com"
-    }
-  })
 
-const NEW_CHAT_MESSAGE_EVENT="newChatMessage"
-io.on('connection',(socket)=>{
-    console.log("socket id is ="+socket.id+"connected")
-    //join the socket in its own room
-    const {roomId} = socket.handshake.query
-    socket.join(roomId)
-    //listen for messages
-    socket.on(NEW_CHAT_MESSAGE_EVENT,(data)=>{
-        io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT,data)
-    })
-    //user disconnect
-    socket.on('disconnect',()=>{
-        socket.leave(roomId )
-    })
-})
-// const port =4000;
-const port = process.env.PORT || 4000; // Use the provided PORT or default to 3000
-server.listen(port,()=>{
-    console.log("server started on port "+port)
-})
+const http = require('http');
+const io = require('socket.io');
+const server = http.createServer((req, res) => {
+  if (req.url === '/') {
+    // Serve an HTML response with "Server is running"
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end('<h1>Server is running</h1>');
+  } else {
+    res.writeHead(404);
+    res.end('File not found');
+  }
+});
+
+const socket = io(server, {
+  cors: {
+    origin: '*'
+  }
+});
+
+const NEW_CHAT_MESSAGE_EVENT = "newChatMessage";
+
+socket.on('connection', (socket) => {
+  console.log("Socket id is " + socket.id + " connected");
+
+  // Join the socket in its own room
+  const { roomId } = socket.handshake.query;
+  socket.join(roomId);
+
+  // Listen for messages
+  socket.on(NEW_CHAT_MESSAGE_EVENT, (data) => {
+    socket.to(roomId).emit(NEW_CHAT_MESSAGE_EVENT, data);
+  });
+
+  // User disconnects
+  socket.on('disconnect', () => {
+    socket.leave(roomId);
+  });
+});
+
+const port = 4000;
+
+server.listen(port, () => {
+  console.log("Server started on port " + port);
+});
+
+
+
+
+
+
+
+// const server =require('http').createServer();
+//   const io= require('socket.io')(server,{
+//     cors:{
+//         origin:"https://mernfront-9iia.onrender.com"
+//     }
+//   })
+
+// const NEW_CHAT_MESSAGE_EVENT="newChatMessage"
+// io.on('connection',(socket)=>{
+//     console.log("socket id is ="+socket.id+"connected")
+//     //join the socket in its own room
+//     const {roomId} = socket.handshake.query
+//     socket.join(roomId)
+//     //listen for messages
+//     socket.on(NEW_CHAT_MESSAGE_EVENT,(data)=>{
+//         io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT,data)
+//     })
+//     //user disconnect
+//     socket.on('disconnect',()=>{
+//         socket.leave(roomId )
+//     })
+// })
+// // const port =4000;
+// const port = process.env.PORT || 4000; // Use the provided PORT or default to 3000
+// server.listen(port,()=>{
+//     console.log("server started on port "+port)
+// })
 
 // // ----------------------------------------------------------------
 // const express = require("express");
