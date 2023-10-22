@@ -38,11 +38,11 @@ socket.on('connection', (socket) => {
   });
 });
 
-const port = 4000;
+// const port = 4000;
 
-server.listen(port, () => {
-  console.log("Server started on port " + port);
-});
+// server.listen(port, () => {
+//   console.log("Server started on port " + port);
+// });
 
 
 
